@@ -1,0 +1,19 @@
+version: "1.1"
+
+services:
+  mongo:
+    image: sample-aws-db
+    build: ./sample-aws-db
+    volumes:
+      - ./sample-aws-db/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+  was:
+    image: sample-aws-was
+    build: ./sample-aws-was
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_USER: root
+      MONGO_PASSWORD: 1q2w3e
+      MONGO_DATABASE: example
+      MONGO_HOST: mongo
+      MONGO_PORT: 27017
