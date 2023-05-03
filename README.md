@@ -92,7 +92,7 @@
         npm i @fastify/mongodb
         ```
 
-     2. app.js 수정
+     2. app.ts 수정
 
         ```typescript
         import { fastifyMongodb } from "@fastify/mongodb";
