@@ -9,10 +9,11 @@
      npm i
      npm run dev
      ```
-   - node / fastify
 2. WAS Docker Image 생성
+   - Dockerfile 작성
+   - .dockerignore 작성
 3. DB Docker Image 생성
-   - mongo
+   - Dockerfile 작성
 4. WAS, DB Container 실행 후 연결
 5. AWS ECR 레파지토리 생성 후 이미지 푸시
 6. Github Actions를 이용한 이미지 푸시 자동화
