@@ -130,6 +130,40 @@
         ```
 
 6. AWS ECR 레파지토리 생성 후 이미지 푸시
+
+   - AWS ECR 레파지토리 생성
+   - AWS CLI Credentials 등록
+
+     ```
+     aws configure
+     ```
+
+     - Access Key와 Secret Access Key를 차례대로 등록
+
+   - AWS CLI 인증 토큰을 기반으로 도커 로그인
+
+     ```
+     aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin <account_id>.dkr.ecr.ap-northeast-2.amazonaws.com
+     ```
+
+   - 도커 이미지 빌드
+
+     ```
+     docker build -t sample-aws-was:1.0 ./sample-aws-was
+     ```
+
+   - 빌드된 이미지 태그
+
+     ```
+     docker tag sample-aws-was:1.0 <account_id>.dkr.ecr.ap-northeast-2.amazonaws.com/sample-aws-was:1.0
+     ```
+
+   - 이미지 푸시
+
+     ```
+     docker push <account_id>.dkr.ecr.ap-northeast-2.amazonaws.com/sample-aws-was:1.0
+     ```
+
 7. Github Actions를 이용한 이미지 푸시 자동화
 8. ECR 이미지를 이용한 ECS 컨테이너 세팅
 9. Github Actions를 이용한 배포 자동화
