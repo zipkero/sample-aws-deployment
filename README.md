@@ -165,6 +165,67 @@
      ```
 
 7. Github Actions를 이용한 이미지 푸시 자동화
+
+   - github workflow 작성 > .github/workflows/was-push.yaml
+
+     ```yaml
+     name: Deploy to ECR
+
+     on:
+       push:
+         branches: ["main"]
+
+     env:
+       AWS_REGION: ap-northeast-2
+       ECR_REPOSITORY: sample-aws-was
+       ECS_SERVICE:
+       ECS_CLUSTER:
+       ECS_TASK_DEFINITION:
+       IMAGE_TAG: 1.0
+
+     permissions:
+       contents: read
+
+     jobs:
+       deploy:
+         name: Deploy
+         runs-on: ubuntu-latest
+
+         steps:
+           - name: Checkout
+             uses: actions/checkout@v3
+
+           - name: setup nodejs 20.x
+             uses: actions/setup-node@v3
+             with:
+               node-version: "20.x"
+
+           - name: Configure AWS credentials
+             uses: aws-actions/configure-aws-credentials@v1
+             with:
+               aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+               aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+               aws-region: ${{ env.AWS_REGION }}
+
+           - name: Login to Amazon ECR
+             id: login-ecr
+             uses: aws-actions/amazon-ecr-login@v1
+
+           - name: Build, tag, and push image to Amazon ECR
+             id: build-image
+             working-directory: ./sample-aws-was
+             env:
+               ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+               IMAGE_TAG: ${{ env.IMAGE_TAG }}
+             run: |
+               # Build a docker container and
+               # push it to ECR so that it can
+               # be deployed to ECS.
+               docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+               docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+               echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+     ```
+
 8. ECR 이미지를 이용한 ECS 컨테이너 세팅
 9. Github Actions를 이용한 배포 자동화
    - Code Commit, Code Build도 사용해보기
